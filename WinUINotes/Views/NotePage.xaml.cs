@@ -18,27 +18,54 @@ using WinUINotes.Models;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace WinUINotes.Views
-{
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class NotePage : Page
-    {
-        private Note? noteModel;
-        public NotePage()
-        {
-            this.InitializeComponent();
-        }
+namespace WinUINotes.Views;
 
-        private async void SaveButton_Click(object sender, RoutedEventArgs e)
+/// <summary>
+/// An empty page that can be used on its own or navigated to within a Frame.
+/// </summary>
+public sealed partial class NotePage : Page
+{
+    private Note? noteModel;
+    public NotePage()
+    {
+        this.InitializeComponent();
+    }
+
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+
+        if (e.Parameter is Note note)
+        {
+            noteModel = note;
+        }
+        else
+        {
+            noteModel = new Note();
+        }
+    }
+
+    private async void SaveButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (noteModel is not null)
         {
             await noteModel.SaveAsync();
         }
+        if (Frame.CanGoBack == true)
+        {
+            Frame.GoBack();
+        }
+    }
 
-        private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+    private async void DeleteButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (noteModel is not null)
         {
             await noteModel.DeleteAsync();
+        }
+        if (Frame.CanGoBack == true)
+        {
+            Frame.GoBack();
         }
     }
 }
