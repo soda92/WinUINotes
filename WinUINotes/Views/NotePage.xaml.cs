@@ -25,41 +25,20 @@ namespace WinUINotes.Views
     /// </summary>
     public sealed partial class NotePage : Page
     {
-        private StorageFolder storageFolder = ApplicationData.Current.LocalFolder;
-        private StorageFile? noteFile = null;
-        private string fileName = "note.txt";
+        private Note? noteModel;
         public NotePage()
         {
             this.InitializeComponent();
-            Loaded += NotePage_Loaded;
-        }
-
-        private async void NotePage_Loaded(object sender, RoutedEventArgs e)
-        {
-            noteFile = (StorageFile)await storageFolder.TryGetItemAsync(fileName);
-            if(noteFile is not null)
-            {
-                NoteEditor.Text = await FileIO.ReadTextAsync(noteFile);
-            }
         }
 
         private async void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            if(noteFile is null)
-            {
-                noteFile = await storageFolder.CreateFileAsync(fileName, CreationCollisionOption.ReplaceExisting);
-            }
-            await FileIO.WriteTextAsync(noteFile, NoteEditor.Text);
+            await noteModel.SaveAsync();
         }
 
         private async void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if(noteFile is not null)
-            {
-                await noteFile.DeleteAsync();
-                noteFile = null;
-                NoteEditor.Text = string.Empty;
-            }
+            await noteModel.DeleteAsync();
         }
     }
 }
