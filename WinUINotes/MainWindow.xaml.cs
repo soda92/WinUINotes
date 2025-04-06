@@ -26,11 +26,11 @@ namespace WinUINotes
         public MainWindow()
         {
             this.InitializeComponent();
-        }
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-            myButton.Content = "Clicked";
+            // Hide the default system title bar.
+            ExtendsContentIntoTitleBar = true;
+            // Replase system title bar with the WinUI TitleBar.
+            SetTitleBar(AppTitleBar);
         }
     }
 }
